@@ -22,8 +22,8 @@ public class ListerConnecteurFluxService extends PastellGetService {
      * @param typeConnecteur    Le type du connecteur
      */
     public ListerConnecteurFluxService(@NotNull String url, @NotNull String login, @NotNull String motDePasse,
-                                       @NotNull String idEntite, @NotNull String idFlux,
-                                       @NotNull String typeConnecteur) {
+                                       @NotNull String idEntite, @NotNull String idFlux, @NotNull String typeConnecteur)
+    {
         super(url, String.format(FORMAT_RESSOURCE, idEntite, idFlux, typeConnecteur), login, motDePasse);
     }
 }
