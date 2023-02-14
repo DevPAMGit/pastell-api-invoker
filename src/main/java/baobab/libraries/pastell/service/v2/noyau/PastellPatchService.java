@@ -16,7 +16,8 @@ public class PastellPatchService extends RequeteHTTPPatchAuthBasic implements IS
 
     /**
      * Initialise une nouvelle instance de la classe {@link PastellPatchService}.
-     * @param url           L'URL de connexion
+     * @param url           L'URL de connexion.
+     * @param ressource     La ressource à consulter.
      * @param login         Le login de connexion.
      * @param motDePasse    Le mot de passe lié au login de connexion.
      */
