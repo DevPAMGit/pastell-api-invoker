@@ -1,7 +1,7 @@
 package baobab.libraries.pastell;
 
 import baobab.libraries.pastell.service.v2.connecteur.*;
-import baobab.libraries.pastell.service.v2.document.ActionDocumentService;
+import baobab.libraries.pastell.service.v2.document.*;
 import baobab.libraries.pastell.service.v2.entite.*;
 import baobab.libraries.pastell.service.v2.flux.*;
 import baobab.libraries.pastell.service.v2.version.GetVersion;
@@ -265,5 +265,126 @@ public class PastellApiV2 {
 
     // ************************************ FIN - SERVICES DE GESTION DES FLUX ************************************* //
 
-   
+    // ************************************** SERVICES DE GESTION DES DOCUMENT ************************************* //
+
+    /**
+     * Méthode permettant d'effectuer une action sur un document.
+     * @param idEntite                  Identifiant de l'entité.
+     * @param idDocument                L'identifiant du document.
+     * @param action                    L'action à executer sur le document.
+     * @return                          Une instance de type {@link JSONObject} indiquant le résultat de l'action sur le
+     *                                      document.
+     * @throws IOException              Si une exception d'entrée/sortie se produit.
+     * @throws RequeteHTTPException     Si l'opération est interrompue.
+     * @throws InterruptedException     Si une exception spécifique à l'utilisation de la librairie a lieu.
+     */
+    public JSONObject actionDocument(@NotNull String idEntite, @NotNull String  idDocument, @NotNull String action)
+            throws IOException, RequeteHTTPException, InterruptedException {
+        return new JSONObject(new ActionDocumentService(this.hote, this.login, this.motDePasse, idEntite,
+                idDocument, action).appeler());
+    }
+
+    /**
+     * Méthode permettant d'ajouter un fichier à un document.
+     * @param idEntite                  L'identifiant de l'entité.
+     * @param idDocument                L'identifiant du document.
+     * @param idParametre               L'identifiant du paramètre.
+     * @param nomFichier                Le nom du fichier.
+     * @param contenu                   Le contenu du fichier.
+     * @return                          Une instance de type {@link JSONObject} représentant contenant les informations
+     *                                      du document.
+     * @throws IOException              Si une exception d'entrée/sortie se produit.
+     * @throws RequeteHTTPException     Si l'opération est interrompue.
+     * @throws InterruptedException     Si une exception spécifique à l'utilisation de la librairie a lieu.
+     */
+    public JSONObject ajouterFichierDocument(@NotNull String idEntite, @NotNull String idDocument,
+                                             @NotNull String idParametre, @NotNull String nomFichier,
+                                             @NotNull byte[] contenu)
+            throws IOException, RequeteHTTPException, InterruptedException {
+        return new JSONObject(new AjouterFichierDocumentService(this.hote, this.login, this.motDePasse,
+                                                                idEntite, idDocument, idParametre, nomFichier,
+                                                                contenu).appeler());
+    }
+
+    /**
+     * Méthode permettant de créer un document sur une entité.
+     * @param idEntite                  L'identifiant de l'entité.
+     * @param type                      Le type de document à créer.
+     * @return                          Une instance de type {@link JSONObject} représentant le détail du document.
+     * @throws IOException              Si une exception d'entrée/sortie se produit.
+     * @throws RequeteHTTPException     Si l'opération est interrompue.
+     * @throws InterruptedException     Si une exception spécifique à l'utilisation de la librairie a lieu.
+     */
+    public JSONObject creerDocument(@NotNull String idEntite, @NotNull String type)
+            throws IOException, RequeteHTTPException, InterruptedException {
+        return new JSONObject(
+                new CreerDocumentService(this.hote, this.login, this.motDePasse, idEntite, type).appeler()
+        );
+    }
+
+    /**
+     * Méthode permettant de récupérer le détail d'un document sur une entité.
+     * @param idEntite                  L'identifiant de l'entité.
+     * @param idDocument                L'identifiant du document.
+     * @return                          Une instance de type {@link JSONObject} représentant le détail du document.
+     * @throws IOException              Si une exception d'entrée/sortie se produit.
+     * @throws RequeteHTTPException     Si l'opération est interrompue.
+     * @throws InterruptedException     Si une exception spécifique à l'utilisation de la librairie a lieu.
+     */
+    public JSONObject detailDocument(@NotNull String idEntite, @NotNull String idDocument)
+            throws IOException, RequeteHTTPException, InterruptedException {
+        return new JSONObject(
+                new DetailDocumentService(this.hote, this.login, this.motDePasse, idEntite, idDocument).appeler());
+    }
+
+    /**
+     * Méthode permettant de lister les documents présents sur une entité.
+     * @param idEntite                  L'identifiant de l'entité.
+     * @return                          Une instance de type {@link JSONArray} représentant la liste des documents
+     *                                      présents sur l'instance.
+     * @throws IOException              Si une exception d'entrée/sortie se produit.
+     * @throws RequeteHTTPException     Si l'opération est interrompue.
+     * @throws InterruptedException     Si une exception spécifique à l'utilisation de la librairie a lieu.
+     */
+    public JSONArray listerDocuments(@NotNull String idEntite) throws IOException, RequeteHTTPException, InterruptedException {
+        return new JSONArray(
+                new ListerDocumentEntiteService(this.hote, this.login, this.motDePasse, idEntite).appeler());
+    }
+
+    /**
+     * Méthode permettant de modifier les propriétés d'un document.
+     * @param idEntite                  L'identifiant de l'entité.
+     * @param idDocument                L'identifiant du document.
+     * @param donnees                   Les données à modifier sur le document.
+     * @return                          Une instance de type {@link JSONObject} représentant le détail du document.
+     * @throws IOException              Si une exception d'entrée/sortie se produit.
+     * @throws RequeteHTTPException     Si l'opération est interrompue.
+     * @throws InterruptedException     Si une exception spécifique à l'utilisation de la librairie a lieu.
+     */
+    public JSONObject modifierDocument(@NotNull String idEntite, @NotNull String idDocument,
+                                       HashMap<String,String> donnees)
+            throws IOException, RequeteHTTPException, InterruptedException {
+        return new JSONObject(
+                new ModifierDocumentService(this.hote, this.login, this.motDePasse, idEntite, idDocument,
+                                            donnees).appeler());
+    }
+
+    /**
+     * Méthode permettant de récupérer un fichier lié à un document Pastell.
+     * @param idEntite                  L'identifiant de l'entité.
+     * @param idDocument                L'identifiant du document.
+     * @param idParametre               L'identifiant du paramètre du fichier sur le document.
+     * @return                          Une instance de type {@link JSONObject} représentant le détail du document.
+     * @throws IOException              Si une exception d'entrée/sortie se produit.
+     * @throws RequeteHTTPException     Si l'opération est interrompue.
+     * @throws InterruptedException     Si une exception spécifique à l'utilisation de la librairie a lieu.
+     */
+    public JSONObject recupererFichierDocument(@NotNull String idEntite, @NotNull String idDocument,
+                                               @NotNull String idParametre)
+            throws IOException, RequeteHTTPException, InterruptedException {
+        return new JSONObject(new RecupererFichierDocumentService(this.hote, this.login, this.motDePasse,
+                                                                 idEntite, idDocument, idParametre).appeler());
+    }
+
+    // ************************************ FIN - SERVICES DE GESTION DES DOCUMENT ********************************* //
 }
