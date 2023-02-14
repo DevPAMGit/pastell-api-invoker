@@ -1,10 +1,9 @@
 package baobab.libraries.pastell;
 
-import baobab.libraries.pastell.service.v2.connecteur.CreerConnecteurService;
-import baobab.libraries.pastell.service.v2.connecteur.ListerConnecteursFamilleService;
-import baobab.libraries.pastell.service.v2.connecteur.ListerFamillesConnecteursService;
-import baobab.libraries.pastell.service.v2.connecteur.ModifierConnecteurService;
+import baobab.libraries.pastell.service.v2.connecteur.*;
+import baobab.libraries.pastell.service.v2.document.ActionDocumentService;
 import baobab.libraries.pastell.service.v2.entite.*;
+import baobab.libraries.pastell.service.v2.flux.*;
 import baobab.libraries.pastell.service.v2.version.GetVersion;
 import baobab.libraries.requete.noyau.RequeteHTTPException;
 import org.jetbrains.annotations.NotNull;
@@ -156,17 +155,115 @@ public class PastellApiV2 {
 
     /**
      *
-     * @param idEntite      L'entité sur laquelle créé le on modifie le connecteur.
+     * @param idEntite      L'entité sur laquelle on modifie le connecteur.
      * @param idConnecteur  L'identifiant du connecteur à modifier sur l'entité.
      * @param donnees       Les données à modifier sur le connecteur.
-     * @return
-     * @throws IOException
-     * @throws RequeteHTTPException
-     * @throws InterruptedException
+     * @return              Une instance de classe {@link JSONObject}.
+     * @throws IOException              Si une exception d'entrée/sortie se produit.
+     * @throws RequeteHTTPException     Si l'opération est interrompue.
+     * @throws InterruptedException     Si une exception spécifique à l'utilisation de la librairie a lieu.
      */
     public JSONObject modifierConnecteur(@NotNull String idEntite, @NotNull String idConnecteur,
                                          HashMap<String, String> donnees) throws IOException, RequeteHTTPException, InterruptedException {
         return new JSONObject(new ModifierConnecteurService(this.hote, this.login, this.motDePasse, idEntite,
                 idConnecteur, donnees).appeler());
     }
+
+    /**
+     * Méthode permettant supprimer un connecteur d'une entité.
+     * @param idEntite                  L'identifiant de l'entité sur laquelle on souhaite supprimer le connecteur.
+     * @param idConnecteur              L'identifiant du connecteur à supprimer.
+     * @return                          Une instance de classe {@link JSONObject}.
+     * @throws IOException              Si une exception d'entrée/sortie se produit.
+     * @throws RequeteHTTPException     Si l'opération est interrompue.
+     * @throws InterruptedException     Si une exception spécifique à l'utilisation de la librairie a lieu.
+     */
+    public JSONObject supprimerConnecteur(@NotNull String idEntite, @NotNull String idConnecteur)
+            throws IOException, RequeteHTTPException, InterruptedException {
+        return new JSONObject(
+                new SupprimerConnecteurService(this.hote, this.login, this.motDePasse, idEntite, idConnecteur).appeler()
+        );
+    }
+
+    // ************************************** SERVICES DE GESTION DES FLUX ****************************************** //
+
+    /**
+     * Méthode permettant d'associer un connecteur à un flux sur une entité.
+     * @param idEntite                  L'identifiant de l'entité.
+     * @param idFlux                    L'identifiant du flux.
+     * @param idConnecteur              L'identifiant du connecteur.
+     * @param typeConnecteur            Le type de connecteur.
+     * @return                          Une instance de {@link JSONObject} contenant les informations de l'association.
+     * @throws IOException              Si une exception d'entrée/sortie se produit.
+     * @throws RequeteHTTPException     Si l'opération est interrompue.
+     * @throws InterruptedException     Si une exception spécifique à l'utilisation de la librairie a lieu.
+     */
+    public JSONObject associerConnecteurFlux(@NotNull String idEntite, @NotNull String idFlux,
+                                             @NotNull String idConnecteur, @NotNull String typeConnecteur)
+            throws IOException, RequeteHTTPException, InterruptedException {
+        return new JSONObject(new AssocierConnecteurFluxService(this.hote, this.login, this.motDePasse, idEntite,
+                                                                idFlux, idConnecteur, typeConnecteur).appeler());
+    }
+
+    /**
+     * Méthode permettant de récupérer les informations concernant un flux.
+     * @param idFlux                    L'identifiant du flux.
+     * @return                          Une instance de {@link JSONObject} contenant les informations du flux.
+     * @throws IOException              Si une exception d'entrée/sortie se produit.
+     * @throws RequeteHTTPException     Si l'opération est interrompue.
+     * @throws InterruptedException     Si une exception spécifique à l'utilisation de la librairie a lieu.
+     */
+    public JSONObject detailFlux(@NotNull String idFlux)
+            throws IOException, RequeteHTTPException, InterruptedException {
+        return new JSONObject(new DetailFluxService(this.hote, this.login, this.motDePasse, idFlux).appeler());
+    }
+
+    /**
+     * Méthode permettant de dissocier un connecteur d'un flux sur une entité.
+     * @param idEntite                  L'identifiant de l'entité sur
+     * @param idAssociationFlux         L'identifiant de association.
+     * @return                          Une instance de {@link JSONObject} contenant les informations de suppression de
+     *                                      l'association.
+     * @throws IOException              Si une exception d'entrée/sortie se produit.
+     * @throws RequeteHTTPException     Si l'opération est interrompue.
+     * @throws InterruptedException     Si une exception spécifique à l'utilisation de la librairie a lieu.
+     */
+    public JSONObject dissocierConnecteurFlux(@NotNull String idEntite, @NotNull String idAssociationFlux)
+            throws IOException, RequeteHTTPException, InterruptedException {
+        return new JSONObject(new DissocierConnecteurFluxService(this.hote, this.login, this.motDePasse, idEntite,
+                                                                 idAssociationFlux).appeler());
+    }
+
+    /**
+     * Méthode permettant de lister tous les flux de la plateforme.
+     * @return                          Une instance de type {@link JSONObject} contenant tous les flux disponibles.
+     * @throws IOException              Si une exception d'entrée/sortie se produit.
+     * @throws RequeteHTTPException     Si l'opération est interrompue.
+     * @throws InterruptedException     Si une exception spécifique à l'utilisation de la librairie a lieu.
+     */
+    public JSONObject listerFlux() throws IOException, RequeteHTTPException, InterruptedException {
+        return new JSONObject(new ListerFluxService(this.hote, this.login, this.motDePasse).appeler());
+    }
+
+    /**
+     * Méthode permettant de récupérer la liste des connecteurs associés à un flux sur une entité.
+     * @param idEntite                  L'identifiant de l'entité.
+     * @param idFlux                    L'identifiant du flux.
+     * @param typeConnecteur            Le type du connecteur.
+     * @return                          Une instance de type {@link JSONArray} contenant tous connecteurs liés à un 
+     *                                      flux sur une entité.
+     * @throws IOException              Si une exception d'entrée/sortie se produit.
+     * @throws RequeteHTTPException     Si l'opération est interrompue.
+     * @throws InterruptedException     Si une exception spécifique à l'utilisation de la librairie a lieu.
+     */
+    public JSONArray listerConnecteurAssociesFlux(@NotNull String idEntite, @NotNull String idFlux,
+                                                  @NotNull String typeConnecteur)
+            throws IOException, RequeteHTTPException, InterruptedException {
+        return new JSONArray(new ListerConnecteurFluxService(this.hote, this.login, this.motDePasse, idEntite, idFlux,
+                                                             typeConnecteur).appeler());
+    }
+
+    // ************************************ FIN - SERVICES DE GESTION DES FLUX ************************************* //
+
+   
 }
