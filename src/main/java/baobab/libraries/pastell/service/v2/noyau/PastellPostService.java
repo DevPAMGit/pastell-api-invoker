@@ -18,6 +18,7 @@ public class PastellPostService extends RequeteHTTPPostAuthBasic implements ISer
     /**
      * Initialise une nouvelle instance de la classe {@link PastellPostService}.
      * @param url           L'URL de connexion
+     * @param ressource     La ressource à consulter sur l'hôte distant.
      * @param login         Le login de connexion.
      * @param motDePasse    Le mot de passe lié au login de connexion.
      */
