@@ -21,9 +21,8 @@ public class SupprimerConnecteurService extends PastellDeleteService {
      * @param idEntite      L'identifiant de l'entité ou le connecteur a été créée.
      * @param idConnecteur  L'identifiant du connecteur à supprimer.
      */
-    public SupprimerConnecteurService(@NotNull String url, @NotNull String ressource, @NotNull String login,
-                                      @NotNull String motDePasse, @NotNull String idEntite,
-                                      @NotNull String idConnecteur) {
+    public SupprimerConnecteurService(@NotNull String url, @NotNull String login, @NotNull String motDePasse,
+                                      @NotNull String idEntite, @NotNull String idConnecteur) {
         super(url, String.format(FORMAT_RESSOURCE, idEntite, idConnecteur), login, motDePasse);
     }
 }
