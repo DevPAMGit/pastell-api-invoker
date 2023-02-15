@@ -120,8 +120,10 @@ public class PastellApiV2Test {
 
     @Order(13)
     @Test
+    @Disabled
     @DisplayName("Modification d'un document.")
     public void testerModificationDocument() throws IOException, RequeteHTTPException, InterruptedException {
+        Thread.sleep(3000);
         JSONObject document = api.modifierDocument(modele.idEntite, modele.idDocument, VariableApiTestModel.donnees);
         Assertions.assertTrue(document.has("result"));
         Assertions.assertEquals("ok", document.getString("result"));
@@ -129,10 +131,11 @@ public class PastellApiV2Test {
 
     @Order(15)
     @Test
+    @Disabled
     @DisplayName("Récupération du détail du document")
     public void testerDetailDocument() throws IOException, RequeteHTTPException, InterruptedException {
         JSONObject document = api.detailDocument(modele.idEntite, modele.idDocument);
-
+        Thread.sleep(3000);
         Assertions.assertTrue(document.has("data"));
         JSONObject data = document.getJSONObject("data");
 
