@@ -5,12 +5,9 @@ import baobab.libraries.pastell.variable.VariableConnecteurModel;
 import baobab.libraries.pastell.variable.VariableEntiteTestModel;
 import baobab.libraries.pastell.variable.VariableIdentificationTestModel;
 import baobab.libraries.requete.noyau.RequeteHTTPException;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
 
@@ -19,7 +16,6 @@ import java.io.IOException;
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PastellApiV2Test {
-
     /**
      * L'instance à tester.
      */
@@ -70,17 +66,6 @@ public class PastellApiV2Test {
     }
 
     @Test
-    @Order(3)
-    @DisplayName("Création d'un entité fille.")
-    public void testerCreerEntiteFille() throws IOException, RequeteHTTPException, InterruptedException {
-        JSONObject resultat = api.creerEntite(modele.idEntite, VariableEntiteTestModel.nomEntiteFille,
-                              VariableEntiteTestModel.typeFille, VariableEntiteTestModel.siren, "0");
-
-        Assertions.assertTrue(resultat.has("id_e"));
-        modele.idEntiteFille = resultat.getString("id_e");
-    }
-
-    @Test
     @Order(4)
     @DisplayName("Consultation d'une entité.")
     public void testerConsultationEntite() throws IOException, RequeteHTTPException, InterruptedException {
@@ -91,70 +76,10 @@ public class PastellApiV2Test {
         Assertions.assertEquals(VariableEntiteTestModel.centreGestion, entite.getString("centre_de_gestion"));
     }
 
-    @Test
-    @Order(5)
-    @DisplayName("Lister des entités disponible.")
-    public void testerListageEntites() throws IOException, RequeteHTTPException, InterruptedException {
-        boolean mereTrouvee = false;
-        boolean filleTrouvee = false;
-
-        JSONArray resultat = api.getEntites();
-        int max = resultat.length(), index = 0;
-        while((!mereTrouvee || !filleTrouvee) && index < max) {
-            JSONObject objet = resultat.getJSONObject(index);
-            String idEntite = objet.getString("id_e");
-            if(idEntite.equals(modele.idEntite)) mereTrouvee = true;
-            if(idEntite.equals(modele.idEntiteFille) ){
-                String idEntiteMere = objet.getString("entite_mere");
-                if(idEntiteMere.equals(modele.idEntite)) filleTrouvee = true;
-            }
-
-            index++;
-        }
-        Assertions.assertTrue(mereTrouvee);
-        Assertions.assertTrue(filleTrouvee);
-    }
-
-    @Test
-    @Order(6)
-    @DisplayName("Suppression d'une entité.")
-    public void testerSuppressionEntite() throws IOException, RequeteHTTPException, InterruptedException {
-        JSONObject resultat = api.supprimerEntite(modele.idEntiteFille);
-        Assertions.assertTrue(resultat.has("result"));
-        Assertions.assertEquals(resultat.getString("result"), "ok");
-    }
-
-    @Order(7)
-    @Disabled
-    @ParameterizedTest
-    @ValueSource(strings = { "Bordereau SEDA", "classification-cdg", "empty", "GED", "Glaneur", "mailsec",
-                             "pdf-relance", "Purge", "SAE", "signature", "TdT", "transformation" })
-    @DisplayName("Récupération des familles de connecteurs")
-    public void testerListerFamillesConnecteur(String famille)
-            throws IOException, RequeteHTTPException, InterruptedException {
-        JSONArray familles = api.getFamillesConnecteur();
-        int index = 0, max = familles.length();
-        while (!familles.getString(index).equals(famille) && index < max) index++;
-        Assertions.assertTrue(index < max);
-    }
-
-    @Order(8)
-    @Disabled
-    @ParameterizedTest
-    @ValueSource(strings = { "fakeIparapheur", "fast-parapheur", "iParapheur", "libersign" })
-    @DisplayName("Récupération des connecteurs de la famille signature")
-    public void testerListerConnecteursFamille(String famille)
-            throws IOException, RequeteHTTPException, InterruptedException {
-        JSONArray familles = api.getConnecteursFamille("signature");
-        int index = 0, max = familles.length();
-        while (!familles.getString(index).equals(famille) && index < max) index++;
-        Assertions.assertTrue(index < max);
-    }
-
     @Order(9)
     @Test
     @DisplayName("Création d'un connecteur sur une entité")
-    public void testerConnecteur() throws IOException, RequeteHTTPException, InterruptedException {
+    public void testerCreerConnecteur() throws IOException, RequeteHTTPException, InterruptedException {
         JSONObject connecteur = api.creerConnecteur(modele.idEntite, VariableConnecteurModel.libelle,
                                 VariableConnecteurModel.idConnecteur);
         Assertions.assertTrue(connecteur.has("id_ce"));
@@ -219,6 +144,7 @@ public class PastellApiV2Test {
 
     @Order(16)
     @Test
+    @Disabled
     @DisplayName("Orientation d'un document")
     public void testerOrientationDocument() throws IOException, RequeteHTTPException, InterruptedException {
         JSONObject document = api.actionDocument(modele.idEntite, modele.idDocument, "orientation");

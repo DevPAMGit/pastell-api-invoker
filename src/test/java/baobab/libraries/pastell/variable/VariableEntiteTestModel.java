@@ -9,12 +9,7 @@ public class VariableEntiteTestModel {
     /**
      * Le nom de l'entité de test.
      */
-    public static final String nomEntite = "Entité de test";
-
-    /**
-     * Le nom de l'entité fille de test.
-     */
-    public static final String nomEntiteFille = "Entité de test fille";
+    public static final String nomEntite = "Entite de test";
 
     /**
      * Le numéro SIREN des entités de tests.
@@ -25,11 +20,6 @@ public class VariableEntiteTestModel {
      * Le type de l'entité mère.
      */
     public static final TypeEntite typeMere = TypeEntite.COLLECTIVITE;
-
-    /**
-     * Le type de l'entité fille.
-     */
-    public static final TypeEntite typeFille = TypeEntite.CENTRE_DE_GESTION;
 
     /**
      * Valeur du centre de gestions des entités

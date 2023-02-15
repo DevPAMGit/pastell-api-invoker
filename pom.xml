@@ -11,26 +11,27 @@
   <name>pastell-api-invoker</name>
   <url>https://github.com/DevPAMGit/pastell-api-invoker</url>
 
-
-  <repositories>
-    <repository>
-      <id>jitpack.io</id>
-      <url>https://jitpack.io</url>
-    </repository>
-  </repositories>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
   </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub DevPAMGit Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/DevPAMGit/pastell-api-invoker</url>
+    </repository>
+  </distributionManagement>
 
   <dependencies>
 
+    <!-- https://mvnrepository.com/artifact/org.jetbrains/annotations -->
     <dependency>
       <groupId>org.jetbrains</groupId>
-      <artifactId>annotations-java5</artifactId>
-      <version>RELEASE</version>
+      <artifactId>annotations</artifactId>
+      <version>24.0.0</version>
       <scope>compile</scope>
     </dependency>
 
@@ -41,13 +42,14 @@
       <version>20220924</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+    <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>RELEASE</version>
+      <version>5.9.2</version>
       <scope>test</scope>
     </dependency>
+
 
     <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
     <dependency>
@@ -57,20 +59,10 @@
     </dependency>
 
     <dependency>
-      <groupId>com.github.devpamgit</groupId>
-      <artifactId>api-invoker</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-
-    <!--
-    <dependency>
       <groupId>baobab.libraries</groupId>
       <artifactId>api-invoker</artifactId>
       <version>1.0.0</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/../api-invoker/target/api-invoker-1.0.0.jar</systemPath>
     </dependency>
-    -->
 
   </dependencies>
 
@@ -90,6 +82,7 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.0</version>
+
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
