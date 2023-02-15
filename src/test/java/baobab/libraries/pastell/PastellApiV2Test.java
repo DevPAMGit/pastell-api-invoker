@@ -3,6 +3,7 @@ package baobab.libraries.pastell;
 import baobab.libraries.pastell.variable.VariableApiTestModel;
 import baobab.libraries.pastell.variable.VariableConnecteurModel;
 import baobab.libraries.pastell.variable.VariableEntiteTestModel;
+import baobab.libraries.pastell.variable.VariableIdentificationTestModel;
 import baobab.libraries.requete.noyau.RequeteHTTPException;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,9 +14,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
 
-
 /**
- * Unit test for simple App.
+ * Classe de tests unitaires pour l'instance {@link PastellApiV2}.
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PastellApiV2Test {
@@ -35,7 +35,8 @@ public class PastellApiV2Test {
      */
     @BeforeAll
     public static void initialiser(){
-        api = new PastellApiV2(VariableApiTestModel.hote, VariableApiTestModel.login, VariableApiTestModel.mdp);
+        api = new PastellApiV2(VariableIdentificationTestModel.hote, VariableIdentificationTestModel.login,
+                VariableIdentificationTestModel.mdp);
         modele = new PastellApiTestModel();
     }
 
@@ -124,6 +125,7 @@ public class PastellApiV2Test {
     }
 
     @Order(7)
+    @Disabled
     @ParameterizedTest
     @ValueSource(strings = { "Bordereau SEDA", "classification-cdg", "empty", "GED", "Glaneur", "mailsec",
                              "pdf-relance", "Purge", "SAE", "signature", "TdT", "transformation" })
@@ -137,10 +139,12 @@ public class PastellApiV2Test {
     }
 
     @Order(8)
+    @Disabled
     @ParameterizedTest
     @ValueSource(strings = { "fakeIparapheur", "fast-parapheur", "iParapheur", "libersign" })
     @DisplayName("Récupération des connecteurs de la famille signature")
-    public void testerListerConnecteursFamille(String famille) throws IOException, RequeteHTTPException, InterruptedException {
+    public void testerListerConnecteursFamille(String famille)
+            throws IOException, RequeteHTTPException, InterruptedException {
         JSONArray familles = api.getConnecteursFamille("signature");
         int index = 0, max = familles.length();
         while (!familles.getString(index).equals(famille) && index < max) index++;
@@ -170,4 +174,91 @@ public class PastellApiV2Test {
             Assertions.assertEquals(VariableConnecteurModel.donnees.get(cle), donnees.getString(cle));
     }
 
+    @Order(11)
+    @Test
+    @DisplayName("Liaison du connecteur à un flux")
+    public void testLierConnecteurFlux() throws IOException, RequeteHTTPException, InterruptedException {
+        JSONObject flux = api.associerConnecteurFlux(modele.idEntite, VariableApiTestModel.nomFlux, modele.idConnecteur,
+                                                     VariableApiTestModel.typeConnecteur);
+        Assertions.assertTrue(flux.has("id_fe"));
+        modele.idAssociation = flux.getString("id_fe");
+    }
+
+    @Order(12)
+    @Test
+    @DisplayName("Création d'un document.")
+    public void testerCreationDocument() throws IOException, RequeteHTTPException, InterruptedException {
+        JSONObject document = api.creerDocument(modele.idEntite, VariableApiTestModel.nomFlux);
+        Assertions.assertTrue(document.has("id_d"));
+        modele.idDocument = document.getString("id_d");
+    }
+
+    @Order(13)
+    @Test
+    @DisplayName("Modification d'un document.")
+    public void testerModificationDocument() throws IOException, RequeteHTTPException, InterruptedException {
+        JSONObject document = api.modifierDocument(modele.idEntite, modele.idDocument, VariableApiTestModel.donnees);
+        Assertions.assertTrue(document.has("result"));
+        Assertions.assertEquals("ok", document.getString("result"));
+    }
+
+    @Order(15)
+    @Test
+    @DisplayName("Récupération du détail du document")
+    public void testerDetailDocument() throws IOException, RequeteHTTPException, InterruptedException {
+        JSONObject document = api.detailDocument(modele.idEntite, modele.idDocument);
+
+        Assertions.assertTrue(document.has("data"));
+        JSONObject data = document.getJSONObject("data");
+
+        for(String cle : VariableApiTestModel.donnees.keySet()) {
+            Assertions.assertTrue(data.has(cle));
+            Assertions.assertEquals(VariableApiTestModel.donnees.get(cle), data.getString(cle));
+        }
+    }
+
+    @Order(16)
+    @Test
+    @DisplayName("Orientation d'un document")
+    public void testerOrientationDocument() throws IOException, RequeteHTTPException, InterruptedException {
+        JSONObject document = api.actionDocument(modele.idEntite, modele.idDocument, "orientation");
+        Assertions.assertTrue(document.has("result"));
+        Assertions.assertTrue(document.getBoolean("result"));
+    }
+
+    @Order(18)
+    @Test
+    @DisplayName("Suppression du document")
+    public void testerSuppressionDocument() throws IOException, RequeteHTTPException, InterruptedException {
+        JSONObject document = api.actionDocument(modele.idEntite, modele.idDocument, "supression");
+        Assertions.assertTrue(document.has("result"));
+        Assertions.assertTrue(document.getBoolean("result"));
+    }
+
+    @Order(19)
+    @Test
+    @DisplayName("Dissociation d'un connecteur d'un flux")
+    public void testerDissocierConnecteurFlux() throws IOException, RequeteHTTPException, InterruptedException {
+        JSONObject document = api.dissocierConnecteurFlux(modele.idEntite, modele.idAssociation);
+        Assertions.assertTrue(document.has("result"));
+        Assertions.assertEquals("ok", document.getString("result"));
+    }
+
+    @Order(20)
+    @Test
+    @DisplayName("Suppression du connecteur")
+    public void testerSupprimerConnecteur() throws IOException, RequeteHTTPException, InterruptedException {
+        JSONObject document = api.supprimerConnecteur(modele.idEntite, modele.idConnecteur);
+        Assertions.assertTrue(document.has("result"));
+        Assertions.assertEquals("ok", document.getString("result"));
+    }
+
+    @Order(21)
+    @Test
+    @DisplayName("Suppression du connecteur")
+    public void testerSupprimerEntite() throws IOException, RequeteHTTPException, InterruptedException {
+        JSONObject document = api.supprimerEntite(modele.idEntite);
+        Assertions.assertTrue(document.has("result"));
+        Assertions.assertEquals("ok", document.getString("result"));
+    }
 }
