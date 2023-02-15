@@ -20,6 +20,16 @@ public class PastellApiTestModel {
     public String idConnecteur;
 
     /**
+     * Identifiant de l'association.
+     */
+    public String idAssociation;
+
+    /**
+     * L'identifiant du document. 
+     */
+    public String idDocument;
+
+    /**
      * Initialise une nouvelle instance de la classe {@link PastellApiTestModel}.
      */
     public PastellApiTestModel(){ }
