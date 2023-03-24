@@ -120,7 +120,6 @@ public class PastellApiV2Test {
 
     @Order(13)
     @Test
-    @Disabled
     @DisplayName("Modification d'un document.")
     public void testerModificationDocument() throws IOException, RequeteHTTPException, InterruptedException {
         Thread.sleep(3000);
@@ -131,7 +130,6 @@ public class PastellApiV2Test {
 
     @Order(15)
     @Test
-    @Disabled
     @DisplayName("Récupération du détail du document")
     public void testerDetailDocument() throws IOException, RequeteHTTPException, InterruptedException {
         JSONObject document = api.detailDocument(modele.idEntite, modele.idDocument);
@@ -147,7 +145,6 @@ public class PastellApiV2Test {
 
     @Order(16)
     @Test
-    @Disabled
     @DisplayName("Orientation d'un document")
     public void testerOrientationDocument() throws IOException, RequeteHTTPException, InterruptedException {
         JSONObject document = api.actionDocument(modele.idEntite, modele.idDocument, "orientation");

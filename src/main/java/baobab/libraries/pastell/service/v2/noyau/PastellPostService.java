@@ -1,6 +1,5 @@
 package baobab.libraries.pastell.service.v2.noyau;
 
-import baobab.libraries.requete.authentifie.base64.RequeteHTTPPatchAuthBasic;
 import baobab.libraries.requete.authentifie.base64.RequeteHTTPPostAuthBasic;
 import baobab.libraries.requete.noyau.RequeteHTTPException;
 import baobab.libraries.service.IService;
